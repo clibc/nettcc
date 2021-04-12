@@ -1,6 +1,7 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 //sleep
@@ -8,11 +9,11 @@
 
 int main()
 {
-    int socketdes;
-    socketdes = socket(AF_INET, SOCK_STREAM, 0);
-    if (socketdes == 0)
+    int socketfd, connfd;
+    socketfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (socketfd == 0)
     {
-        perror("Failed to create a socket!");
+        perror("Failed to create a socket!\n");
         exit(EXIT_FAILURE);
     }
 
@@ -22,9 +23,27 @@ int main()
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(7000);
 
-    bind(socketdes, (struct sockaddr *)&address, sizeof(address));
+    bind(socketfd, (struct sockaddr *)&address, sizeof(address));
 
-    sleep(10);
-    close(socketdes);
+    if (listen(socketfd, 10) == -1)
+    {
+        printf("Failed to listen\n");
+        exit(EXIT_FAILURE);
+    }
+
+    char message[100];
+    memset(message, '0', sizeof(message));
+
+    while (1)
+    {
+        connfd = accept(socketfd, (struct sockaddr *)NULL, NULL);
+
+        strcpy(message, "Hello There!");
+        write(connfd, message, strlen(message));
+        close(connfd);
+        sleep(1);
+    }
+
+    close(socketfd);
     return EXIT_SUCCESS;
 }
