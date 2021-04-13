@@ -22,8 +22,8 @@ int main()
 
     struct sockaddr_in address;
     address.sin_family = AF_INET;
-    address.sin_port = htons(5000);
-    address.sin_addr.s_addr = inet_addr("localhost");
+    address.sin_port = htons(7000);
+    address.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     int connerr = connect(socketfd, (struct sockaddr *)&address, sizeof(address));
     if (connerr < 0)

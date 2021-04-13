@@ -4,7 +4,6 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-//sleep
 #include <unistd.h>
 
 int main()
