@@ -38,7 +38,7 @@ int main()
     {
         connfd = accept(socketfd, (struct sockaddr *)NULL, NULL);
 
-        strcpy(message, "Hello There!");
+        strcpy(message, "Hello There!\n");
         write(connfd, message, strlen(message));
         close(connfd);
         sleep(1);
