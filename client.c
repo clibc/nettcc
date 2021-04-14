@@ -34,13 +34,14 @@ int main()
 
     while (1)
     {
-        int readMessage = read(socketfd, &m_buffer, 100);
+        int readMessage = read(socketfd, m_buffer, 4);
         if (readMessage < 0)
         {
             perror("Failed to receive message!\n");
             exit(EXIT_FAILURE);
         }
 
-        printf("\n%s\n", m_buffer);
+        printf("\n%d\n", *(int *)m_buffer);
+        sleep(1);
     }
 }

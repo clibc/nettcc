@@ -33,11 +33,14 @@ int main()
     char message[100];
     memset(message, '0', sizeof(message));
 
+    int send_this = 0;
+
     while (1)
     {
         connfd = accept(socketfd, (struct sockaddr *)NULL, NULL);
 
-        strcpy(message, "Hello There!\n");
+        memcpy(message, &send_this, sizeof(send_this));
+        send_this++;
         write(connfd, message, strlen(message));
         close(connfd);
         sleep(1);
