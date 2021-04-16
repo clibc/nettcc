@@ -22,8 +22,8 @@ int main()
 
     struct sockaddr_in address;
     address.sin_family = AF_INET;
-    address.sin_port = htons(7000);
     address.sin_addr.s_addr = inet_addr("127.0.0.1");
+    address.sin_port = htons(7000);
 
     int connerr = connect(socketfd, (struct sockaddr *)&address, sizeof(address));
     if (connerr < 0)
@@ -32,16 +32,15 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    while (1)
+    int readMessage = read(socketfd, &m_buffer, sizeof(m_buffer));
+    if (readMessage < 0)
     {
-        int readMessage = read(socketfd, m_buffer, 4);
-        if (readMessage < 0)
-        {
-            perror("Failed to receive message!\n");
-            exit(EXIT_FAILURE);
-        }
-
-        printf("\n%d\n", *(int *)m_buffer);
-        sleep(1);
+        perror("Failed to receive message!\n");
+        exit(EXIT_FAILURE);
     }
+
+    close(connerr);
+    close(socketfd);
+    printf("\n%s\n", m_buffer);
+    return EXIT_SUCCESS;
 }

@@ -1,3 +1,4 @@
+#include <arpa/inet.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,11 +19,19 @@ int main()
 
     //
     struct sockaddr_in address;
+    memset(&address, '0', sizeof(address));
     address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_addr.s_addr = htonl(INADDR_ANY);
     address.sin_port = htons(7000);
 
-    bind(socketfd, (struct sockaddr *)&address, sizeof(address));
+    int bindres = bind(socketfd, (struct sockaddr *)&address, sizeof(address));
+
+    printf("bindres : %d \n", bindres);
+    if (bindres == -1)
+    {
+        printf("\nError occured when binding a socket \n");
+        exit(-1);
+    }
 
     if (listen(socketfd, 10) == -1)
     {
@@ -33,19 +42,11 @@ int main()
     char message[100];
     memset(message, '0', sizeof(message));
 
-    int send_this = 0;
+    connfd = accept(socketfd, (struct sockaddr *)NULL, NULL);
+    strcpy(message, "Hi I am sending this message");
+    write(connfd, message, sizeof(char) * strlen(message));
 
-    while (1)
-    {
-        connfd = accept(socketfd, (struct sockaddr *)NULL, NULL);
-
-        memcpy(message, &send_this, sizeof(send_this));
-        send_this++;
-        write(connfd, message, strlen(message));
-        close(connfd);
-        sleep(1);
-    }
-
+    close(connfd);
     close(socketfd);
     return EXIT_SUCCESS;
 }
