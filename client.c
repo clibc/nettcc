@@ -26,7 +26,7 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    char m_buffer[100];
+    char *m_buffer = NULL;
 
     struct sockaddr_in address;
     address.sin_family = AF_INET;
@@ -35,16 +35,15 @@ int main(int argc, char **argv)
 
     char r_buffer[100];
 
-    strcpy(m_buffer, "Lol");
     while (1)
     {
         int conn = connect(socketfd, (struct sockaddr *)&address, sizeof(address));
-
-        send(socketfd, m_buffer, strlen(m_buffer), 0);
+        size_t linesize;
+        getline(&m_buffer, &linesize, stdin);
+        send(socketfd, m_buffer, linesize - 1, 0);
 
         recv(socketfd, r_buffer, 100, 0);
-        printf("%s\n", r_buffer);
-        close(conn);
+        printf("%s", r_buffer);
         sleep(1);
     }
 

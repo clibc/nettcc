@@ -55,15 +55,15 @@ int main(int argc, char **argv)
 
     connfd = accept(socketfd, NULL, NULL);
 
+    char *m_buffer = NULL;
     while (1)
     {
-        memset(message, 0, sizeof(message));
         recv(connfd, message, sizeof(message), 0);
-        printf("%s \n", message);
+        printf("%s", message);
 
-        memset(message, 0, sizeof(message));
-        strcpy(message, "Hi I am sending the second message");
-        send(connfd, message, strlen(message), 0);
+        size_t linesize;
+        getline(&m_buffer, &linesize, stdin);
+        send(connfd, m_buffer, linesize - 1, 0);
         sleep(1);
     }
 
