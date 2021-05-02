@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-g -Wall -Wextra -pedantic
+CFLAGS=-g -Wall -Wextra -pedantic -std=c99
 
 server: main.o
 	$(CC) $(CFLAGS) main.o -o server.out
